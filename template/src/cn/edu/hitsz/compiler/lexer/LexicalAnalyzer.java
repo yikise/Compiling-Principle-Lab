@@ -44,6 +44,16 @@ public class LexicalAnalyzer {
         // 可自由实现各类缓冲区
         // 或直接采用完整读入方法
         buffer = new String(Files.readAllBytes(Paths.get(path)));
+//        int i = 0;
+//        while (i < buffer.length()) {
+//            char c = buffer.charAt(i);
+//            if (Character.isWhitespace(c)) {
+//                System.out.println(i + ":BLANK");
+//            } else {
+//                System.out.println(i + ":" + c);
+//            }
+//            i++;
+//        }
     }
 
     /**
@@ -71,9 +81,11 @@ public class LexicalAnalyzer {
                     TokenKind tokenKind = TokenKind.fromString(text);
                     TokenList.add(Token.simple(tokenKind));
                 } else {
+                    System.out.println(text);
                     //若不是，则代表是字符串Id，先存入符号表中
                     if (!symbolTable.has(text)) {
                         symbolTable.add(text);
+                        System.out.println(text);
                     }
                     //添加id进TokenList
                     TokenList.add(Token.normal("id", text));
@@ -92,33 +104,35 @@ public class LexicalAnalyzer {
                 //当c是终结符号时
                 String text = buffer.substring(i, i+1);
                 //将数字加入进TokenList
-                TokenList.add(Token.normal("Semicolon", text));
+                TokenList.add(Token.simple("Semicolon"));
+                i++;
             } else if (c == '*' || c == '=') {
                 //当c是*或=时，需要判断后面是否还有一个c
                 int j = i + 1;
-                if (j >= buffer.length()) {
+                if (j >= buffer.length() || buffer.charAt(j) != c) {
                     String text = buffer.substring(i, i + 1);
+                    i++;
                     if (TokenKind.isAllowed(text)) {
                         TokenKind tokenKind = TokenKind.fromString(text);
                         TokenList.add(Token.simple(tokenKind));
                     }
-                } else if (j == c) {
+                } else if (buffer.charAt(j) == c) {
                     String text = buffer.substring(i, j + 1);
-                    if (TokenKind.isAllowed(text)) {
-                        TokenKind tokenKind = TokenKind.fromString(text);
-                        TokenList.add(Token.simple(tokenKind));
-                    }
+                    i = j + 1;
+                    TokenKind tokenKind = TokenKind.fromString(text);
+                    TokenList.add(Token.simple(tokenKind));
                 }
             } else {
-                //其余符号都只有一个，直接判断。
+                //其余符号都只有一个，直接判断
                 String text = buffer.substring(i, i + 1);
+                i++;
                 if (TokenKind.isAllowed(text)) {
                     TokenKind tokenKind = TokenKind.fromString(text);
                     TokenList.add(Token.simple(tokenKind));
                 }
             }
-
         }
+        TokenList.add(Token.eof());
     }
 
     /**

@@ -3,10 +3,8 @@ package cn.edu.hitsz.compiler.symtab;
 import cn.edu.hitsz.compiler.NotImplementedException;
 import cn.edu.hitsz.compiler.utils.FileUtils;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.List;
+import java.util.*;
+
 /**
  * 符号表
  * <br>
@@ -31,10 +29,9 @@ public class SymbolTable {
         for (SymbolTableEntry entry : table) {
             if(entry.getText().equals(text)) {
                 return entry;
-            } else {
-                throw new RuntimeException("该符号在表中不存在");
             }
         }
+        throw new RuntimeException("该符号在表中不存在");
     }
 
     /**
@@ -47,12 +44,18 @@ public class SymbolTable {
     public SymbolTableEntry add(String text) {
         boolean contain = false;
         for (SymbolTableEntry entry : table) {
-            contain = true;
+            if (text.equals(entry.getText())) {
+                contain = true;
+            }
         }
         if (!contain) {
             SymbolTableEntry newEntry = new SymbolTableEntry(text);
             table.add(newEntry);
+            return newEntry;
+        } else {
+            throw new RuntimeException("该符号已在表中存在");
         }
+
     }
 
     /**
@@ -64,7 +67,9 @@ public class SymbolTable {
     public boolean has(String text) {
         boolean contain = false;
         for (SymbolTableEntry entry : table) {
-            contain = true;
+            if (text.equals(entry.getText())) {
+                contain = true;
+            }
         }
         return contain;
     }
@@ -75,7 +80,7 @@ public class SymbolTable {
      * @return 符号表的所有条目
      */
     private Map<String, SymbolTableEntry> getAllEntries() {
-        Map<String, SymbolTableEntry> map = null;
+        Map<String, SymbolTableEntry> map = new HashMap<>();
         for (SymbolTableEntry entry : table) {
             map.put(entry.getText(), entry);
         }
