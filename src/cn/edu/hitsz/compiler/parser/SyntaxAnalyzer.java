@@ -104,11 +104,8 @@ public class SyntaxAnalyzer {
             if (tokenIterator.hasNext()) {
                 if (shouldAdvance) currentToken = tokenIterator.next();
             }
-            Status currentStatus = statusStack.peek();—
+            Status currentStatus = statusStack.peek();
             Action action = lrTable.getAction(currentStatus, currentToken);
-            System.out.println(currentStatus);
-            System.out.println(currentToken);
-            System.out.println(action.getKind());
             switch (action.getKind()) {
                 case Shift:
                     statusStack.push(action.getStatus());
