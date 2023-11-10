@@ -63,9 +63,9 @@ public class Main {
 
         // 各 Observer 输出结果
         productionCollector.dumpToFile(FilePathConfig.PARSER_PATH);
-//        symbolTable.dumpTable(FilePathConfig.NEW_SYMBOL_TABLE);
-//        final var instructions = irGenerator.getIR();
-//        irGenerator.dumpIR(FilePathConfig.INTERMEDIATE_CODE_PATH);
+        symbolTable.dumpTable(FilePathConfig.NEW_SYMBOL_TABLE);
+        final var instructions = irGenerator.getIR();
+        irGenerator.dumpIR(FilePathConfig.INTERMEDIATE_CODE_PATH);
 //
 //        // 模拟执行 IR 并输出结果
 //        final var emulator = IREmulator.load(instructions);
